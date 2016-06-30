@@ -102,11 +102,55 @@ diversity.tail()
 diversity=diversity.astype(float) #python 3 problem, in previous step each output is a list
 diversity.plot(title="Number of popular names in top 50%")
 
+#Last Letter
 
+# extract last letter from name column
+get_last_letter = lambda x: x[-1]
+last_letters = names.name.map(get_last_letter)
+last_letters.name = 'last_letter'
+table = names.pivot_table('births', index=last_letters, columns=['sex', 'year'], aggfunc=sum)
 
+subtable = table.reindex(columns=[1910, 1960, 2010], level='year')
+subtable.head()
+
+subtable.sum()
+
+letter_prop = subtable / subtable.sum() # here in python 3 we don't need .astype(float)
+
+import matplotlib.pyplot as plt
+
+fig, axes = plt.subplots(2, 1, figsize=(10, 8))
+letter_prop['M'].plot(kind='bar', rot=0, ax=axes[0], title='Male')
+letter_prop['F'].plot(kind='bar', rot=0, ax=axes[1], title='Female', legend=False)
     
+#time series
+letter_prop = table / table.sum()
+
+dny_ts = letter_prop.ix[['d', 'n', 'y'], 'M'].T
+dny_ts.head()
+
+dny_ts.plot()
 
 
+#Names trend change ===========
+
+all_names = top1000.name.unique()
+
+mask = np.array(['lesl' in x.lower() for x in all_names])
+
+lesley_like = all_names[mask]
+
+lesley_like
+
+
+filtered = top1000[top1000.name.isin(lesley_like)]
+filtered.groupby('name').births.sum()
+
+table = filtered.pivot_table('births', index='year', columns='sex', aggfunc='sum')
+table = table.div(table.sum(1), axis=0)
+table.tail()
+
+table.plot(style={'M': 'k-', 'F': 'k--'})
 
 
 
