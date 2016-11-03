@@ -39,6 +39,7 @@ def run_experiment(niter=100):
         max_eigenvalue = np.abs(eigvals(mat)).max()
         results.append(max_eigenvalue)
     return results
+
 some_results = run_experiment()
 print ('Largest one we saw: %s' % np.max(some_results))
 
