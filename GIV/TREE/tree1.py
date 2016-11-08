@@ -30,6 +30,13 @@ class BinaryTree:
         self.key = obj
     def get_root_value(self):
         return self.key
+
+#    def preorder(self):
+#        print(self.key)
+#        if self.left_child:
+#            self.left_child.preorder()
+#        if self.right_child:
+#            self.right_child.preorder()
 # Some tests
 TESTTREE = BinaryTree('a')
 print(TESTTREE.get_root_value())
