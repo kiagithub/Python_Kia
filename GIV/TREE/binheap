@@ -1,0 +1,11 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Nov  8 13:16:19 2016
+
+@author: kiawo
+"""
+
+class BinHeap(object):
+    def __init__(self):
+        self.heapList = [0]
+        self.currentSize = 0

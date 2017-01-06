@@ -13,13 +13,11 @@ facts and functionalities of graphs.
 
 class Graph(object):
 
-    def __init__(self, graph_dict=None):
+    def __init__(self, graph_dict={}):
         """ initializes a graph object 
             If no dictionary or None is given, 
             an empty dictionary will be used
         """
-        if graph_dict == None:
-            graph_dict = {}
         self.__graph_dict = graph_dict
 
     def vertices(self):

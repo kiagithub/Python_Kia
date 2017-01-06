@@ -38,10 +38,25 @@ class BinaryTree:
 #        if self.right_child:
 #            self.right_child.preorder()
 # Some tests
-TESTTREE = BinaryTree('a')
-print(TESTTREE.get_root_value())
-TESTTREE.insert_left('b')
-TESTTREE.insert_right('c')
-TESTTREE.insert_left('b1')
-TESTTREE.insert_right('c1')
+#TESTTREE = BinaryTree('a')
+#print(TESTTREE.get_root_value())
+#TESTTREE.insert_left('b')
+#TESTTREE.insert_right('c')
+#TESTTREE.insert_left('b1')
+#TESTTREE.insert_right('c1')
 
+def preorder(tree):
+    if tree:
+        print(tree.get_root_value())
+        preorder(tree.get_left_child())
+        preorder(tree.get_right_child())
+def postorder(tree):
+    if tree != None:
+        postorder(tree.get_left_child())
+        postorder(tree.get_right_child())
+        print(tree.get_root_value())
+def inorder(tree):
+    if tree != None:
+        inorder(tree.get_left_child())
+        print(tree.get_root_value())
+        inorder(tree.get_right_child())
