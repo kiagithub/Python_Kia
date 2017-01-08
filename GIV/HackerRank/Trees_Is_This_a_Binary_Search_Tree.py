@@ -18,30 +18,21 @@ class Node:
         self.data = data 
         self.left = None
         self.right = None
- 
- 
-# Returns true if the given tree is a binary search tree
-# (efficient version)
-def check_binary_search_tree_(node):
-    return (isBSTUtil(node, -float('inf'), float('inf'))
- 
-# Retusn true if the given tree is a BST and its values
+# Returns true if the given tree is a binary search tree 
+def check_binary_search_tree_(root):
+    return is_binary_tree(root, -float('inf'), float('inf'))
+
+# Return true if the given tree is a BST and its values
 # >= min and <= max
-def isBSTUtil(node, mini, maxi):
-     
-    # An empty tree is BST
+def is_binary_tree(node, mini, maxi):
     if node is None:
         return True
- 
-    # False if this node violates min/max constraint
+    
     if node.data < mini or node.data > maxi:
         return False
- 
-    # Otherwise check the subtrees recursively
-    # tightening the min or max constraint
-    return (isBSTUtil(node.left, mini, node.data -1) and
-          isBSTUtil(node.right, node.data+1, maxi))
-
+    
+    return (is_binary_tree(node.left, mini, node.data-1)) and (is_binary_tree(node.right, node.data+1, maxi))
+    
 # Driver program to test above function
 root = Node(4)
 root.left = Node(2)
