@@ -3,6 +3,8 @@
 Created on Mon Aug 15 10:09:35 2016
 
 @author: kiawo
+
+remove duplicate from an unsorted LinkedList
 """
 
 from LinkedList import LinkedList
@@ -22,7 +24,7 @@ def remove_dups(ll):
             current = current.next
     return ll
 
-
+#if a temporary buffer is not allowed
 def remove_dups_followup(ll):
     if ll.head is None:
         return

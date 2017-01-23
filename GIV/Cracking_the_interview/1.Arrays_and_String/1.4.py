@@ -3,6 +3,8 @@
 Created on Tue Aug  9 15:29:09 2016
 
 @author: kiawo
+
+Given a String write a function to check if it is a permutation of a palindrome.
 """
 
 # O(N)

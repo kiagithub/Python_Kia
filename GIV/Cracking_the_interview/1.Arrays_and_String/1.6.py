@@ -3,6 +3,9 @@
 Created on Fri Aug 12 13:27:37 2016
 
 @author: kiawo
+
+Imlement a method to perform basic String compression using the counts of repeated
+characters and returns it if it is shorte that the original string
 """
 
 # O(N)
@@ -19,7 +22,7 @@ def string_compression(string):
             counter = 0
         counter += 1
 
-    # add last repeated character
+    # add last repeated character (important don't forget)
     compressed.append(string[-1] + str(counter))
 
     # returns original string if compressed string isn't smaller

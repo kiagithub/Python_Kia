@@ -10,8 +10,8 @@ import unittest
 
 
 def zero_matrix(matrix):
-    m = len(matrix)
-    n = len(matrix[0])
+    m = len(matrix) #row
+    n = len(matrix[0]) #column
     rows = []
     cols = []
 

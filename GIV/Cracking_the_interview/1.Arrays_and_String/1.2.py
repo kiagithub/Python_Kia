@@ -3,32 +3,35 @@
 Created on Tue Aug  9 10:39:45 2016
 
 @author: kiawo
+
+Given two strings, write a method to decide if one is a permutation of the other.
+
 """
 
 # O(NlogN)
 import unittest
 
-'''
-def check_permutation(string):
-    # function checks if a string is permutation of another
-    str1, str2 = string[0], string[1]
-    #When we have input in the form of 'abcd', 'bacd': string[0] gets the first
-    #word not the first character
-    if len(str1) == len(str2):
-        arr1, arr2 = [], []
-        for char in str1:
-            arr1.append(char)
-        for char in str2:
-            arr2.append(char)
-        arr1.sort()
-        arr2.sort()
-        for index in range(len(arr1)):
-            if arr1[index] != arr2[index]:
-                return False
-        return True
-    else:
-        return False
-'''
+
+#def check_permutation(string):
+#    # function checks if a string is permutation of another
+#    str1, str2 = string[0], string[1]
+#    #When we have input in the form of 'abcd', 'bacd': string[0] gets the first
+#    #word not the first character
+#    if len(str1) == len(str2):
+#        arr1, arr2 = [], []
+#        for char in str1:
+#            arr1.append(char)
+#        for char in str2:
+#            arr2.append(char)
+#        arr1.sort()
+#        arr2.sort()
+#        for index in range(len(arr1)):
+#            if arr1[index] != arr2[index]:
+#                return False
+#        return True
+#    else:
+#        return False
+
 #=============================================================
 """Kia's code"""
 
