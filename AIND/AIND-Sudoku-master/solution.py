@@ -3,11 +3,14 @@ assignments = []
 rows = 'ABCDEFGHI'
 cols = '123456789'
 
+
+
+
 def cross(A, B):
     "Cross product of elements in A and elements in B."
     return [s+t for s in A for t in B]
 
-
+#========= sudoku board ======
 boxes = cross(rows, cols)
 row_units = [cross(r, cols) for r in rows]
 column_units = [cross(rows, c) for c in cols]
@@ -36,25 +39,39 @@ def naked_twins(values):
 
     Returns:
         the values dictionary with the naked twins eliminated from peers.
+        
+    Kia: below code has a bug for the times we have more than 2 twin boxes with the same value
+    I'm working on a different approach right now
     """
 
     # Find all instances of naked twins
     # Eliminate the naked twins as possibilities for their peers
+    
+    #boxes with the size of 2
     prob_twins = [box for box in values.keys() if len(values[box]) == 2]
-
-    for box in prob_twins:
-        for peer in peers[box]:
-            if values[peer] == values[box]:
-                new_peers = peers[box].copy()
-                new_peers.remove(peer)
-                digits = list(values[box])
-                for npeer in new_peers:
-                    if len(values[npeer])>1:
-                        values[npeer] = values[npeer].replace(digits[0],'')
-                        values[npeer] = values[npeer].replace(digits[1],'')
-    return values    
-
-
+    #a dictionary of those boxes with values
+    twin_dict = {box:values[box] for box in prob_twins}
+    #finding keys with the same values
+    flipped = {}
+    for key, value in twin_dict.items():
+        if value not in flipped:
+            flipped[value] = [key]
+        else:
+            flipped[value].append(key)
+            
+    for value in flipped.keys():
+        if len(flipped[value]) ==2:
+            digits = list(str(value))
+            for i in range(len(units[flipped[value][0]])):
+                if flipped[value][1] in units[flipped[value][0]][i]:
+                    for j in range(len(units[flipped[value][0]][i])):
+                        values[units[flipped[value][0]][i][j]] = values[units[flipped[value][0]][i][j]].replace(digits[0],'')
+                        values[units[flipped[value][0]][i][j]] = values[units[flipped[value][0]][i][j]].replace(digits[1],'')
+                        if len(values[units[flipped[value][0]][i][j]]) ==0:
+                            values[units[flipped[value][0]][i][j]] = ''.join(x for x in digits)
+    print(values)
+    return values
+                       
 
 
 def grid_values(grid):
@@ -147,13 +164,19 @@ def solve(grid):
     Returns:
         The dictionary representation of the final sudoku grid. False if no solution exists.
     """
+    
     return search(grid_values(grid))
     
     
 if __name__ == '__main__':
     diag_sudoku_grid = '2.............62....1....7...6..8...3...9...7...6..4...4....8....52.............3'
-    display(solve(diag_sudoku_grid))
+    values = solve(diag_sudoku_grid)
+    display(values)
+    
+    #below function is used for populating assignment
+    assign_value(values, 'A1', values['A1'])
 
+  
     try:
         from visualize import visualize_assignments
         visualize_assignments(assignments)
