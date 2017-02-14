@@ -132,7 +132,7 @@ def search(values):
     values = reduce_puzzle(values)
     if values is False:
         return False ## Failed earlier
-    if all(len(values[s]) == 1 for s in boxes): 
+    if all(len(values[s]) == 1 for s in boxes):
         return values ## Solved!
          
     # Chose one of the unfilled square s with the fewest possibilities
@@ -141,6 +141,7 @@ def search(values):
     for value in values[s]:
         new_sudoku = values.copy()
         new_sudoku[s] = value
+#        assign_value(values, s, values[s])
         attempt = search(new_sudoku)
         if attempt:
             return attempt
