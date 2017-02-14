@@ -1,27 +1,29 @@
+import itertools
 assignments = []
 
 rows = 'ABCDEFGHI'
 cols = '123456789'
 
-
-
-
 def cross(A, B):
     "Cross product of elements in A and elements in B."
     return [s+t for s in A for t in B]
-
 #========= sudoku board ======
 boxes = cross(rows, cols)
 row_units = [cross(r, cols) for r in rows]
 column_units = [cross(rows, c) for c in cols]
 square_units = [cross(rs, cs) for rs in ('ABC','DEF','GHI') for cs in ('123','456','789')]
-diagonal_units = [['A1', 'B2' , 'C3', 'D4' , 'E5', 'F6', 'G7', 'H8', 'I9'], ['I1', 'H2' , 'G3', 'F4' , 'E5', 'D6', 'C7', 'B8', 'A9']]
+#diagonal unit
+rows_list = list(rows)
+cols_list = list(cols)
+diag1 = [r+s for r,s in zip(rows_list, cols_list)]
+diag2 = [r+s for r,s in zip(reversed(rows_list), cols_list)]
+diagonal_units = [diag1, diag2]
+#Udacity unitlist + diagonal_units
 unitlist = row_units + column_units + square_units + diagonal_units
 #dictionary with list comprehension : d = dict((key, value) for (key, value) in iterable)
 units = dict((s, [u for u in unitlist if s in u]) for s in boxes)
 peers = dict((s, set(sum(units[s],[]))-set([s])) for s in boxes)
-
-
+#=============================
 def assign_value(values, box, value):
     """
     Please use this function to update your values dictionary!
@@ -39,41 +41,25 @@ def naked_twins(values):
 
     Returns:
         the values dictionary with the naked twins eliminated from peers.
-        
-    Kia: below code has a bug for the times we have more than 2 twin boxes with the same value
-    I'm working on a different approach right now
     """
-
     # Find all instances of naked twins
     # Eliminate the naked twins as possibilities for their peers
-    
-    #boxes with the size of 2
-    prob_twins = [box for box in values.keys() if len(values[box]) == 2]
-    #a dictionary of those boxes with values
-    twin_dict = {box:values[box] for box in prob_twins}
-    #finding keys with the same values
-    flipped = {}
-    for key, value in twin_dict.items():
-        if value not in flipped:
-            flipped[value] = [key]
-        else:
-            flipped[value].append(key)
-            
-    for value in flipped.keys():
-        if len(flipped[value]) ==2:
-            digits = list(str(value))
-            for i in range(len(units[flipped[value][0]])):
-                if flipped[value][1] in units[flipped[value][0]][i]:
-                    for j in range(len(units[flipped[value][0]][i])):
-                        values[units[flipped[value][0]][i][j]] = values[units[flipped[value][0]][i][j]].replace(digits[0],'')
-                        values[units[flipped[value][0]][i][j]] = values[units[flipped[value][0]][i][j]].replace(digits[1],'')
-                        if len(values[units[flipped[value][0]][i][j]]) ==0:
-                            values[units[flipped[value][0]][i][j]] = ''.join(x for x in digits)
-    print(values)
+    for unit in unitlist:
+        unit_val = [values[box] for box in unit]
+        prob_twins = [tw for tw in unit_val if len(tw)==2]
+        # all combinations of boxes with length of two
+        for d1 , d2 in itertools.combinations(prob_twins, 2):
+            if d1 == d2:
+               #each digit should be removed separately 
+               digits = list(str(d1))
+               for box in unit:
+                   values[box]= values[box].replace(digits[0],'')
+                   values[box]= values[box].replace(digits[1],'')
+                   #without this part, naked twin boxes will be empty
+                   if len(values[box])==0:
+                       values[box] = ''.join(x for x in digits)
     return values
                        
-
-
 def grid_values(grid):
     """
     Convert grid into a dict of {square: char} with '123456789' for empties.
@@ -114,6 +100,7 @@ def eliminate(values):
         digit = values[box]
         for peer in peers[box]:
             values[peer] = values[peer].replace(digit,'')
+#            assign_value(values, peer, values[peer])
     return values
 
 def only_choice(values):
@@ -123,13 +110,16 @@ def only_choice(values):
             if len(dplaces) == 1:
                 #here dplace[0] is equal to box
                 values[dplaces[0]] = digit
+                #in my experience best place to call assign_value()
+                assign_value(values, dplaces[0], digit)
     return values
 
 def reduce_puzzle(values):
-    solved_values = [box for box in values.keys() if len(values[box]) == 1]
     stalled = False
     while not stalled:
         solved_values_before = len([box for box in values.keys() if len(values[box]) == 1])
+        #added naked twin for better performance
+        values = naked_twins(values)
         values = eliminate(values)
         values = only_choice(values)
         solved_values_after = len([box for box in values.keys() if len(values[box]) == 1])
@@ -164,19 +154,13 @@ def solve(grid):
     Returns:
         The dictionary representation of the final sudoku grid. False if no solution exists.
     """
-    
     return search(grid_values(grid))
     
-    
+
 if __name__ == '__main__':
     diag_sudoku_grid = '2.............62....1....7...6..8...3...9...7...6..4...4....8....52.............3'
-    values = solve(diag_sudoku_grid)
-    display(values)
-    
-    #below function is used for populating assignment
-    assign_value(values, 'A1', values['A1'])
-
-  
+    display(solve(diag_sudoku_grid))
+      
     try:
         from visualize import visualize_assignments
         visualize_assignments(assignments)
