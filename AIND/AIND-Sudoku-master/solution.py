@@ -100,7 +100,8 @@ def eliminate(values):
         digit = values[box]
         for peer in peers[box]:
             values[peer] = values[peer].replace(digit,'')
-#            assign_value(values, peer, values[peer])
+            #another place that we can assign values for visualization (optional)
+            #assign_value(values, peer, values[peer])
     return values
 
 def only_choice(values):
@@ -129,6 +130,14 @@ def reduce_puzzle(values):
     return values
 
 def search(values):
+    """
+    assigns a possible value to unsolved boxes and tries to solve sudoku based
+    on that guess. for each value creates a completely new sudoku board
+    
+    args: the Sudoku in dictionary form
+    returns: the values dictionary of solved sudoku
+        
+    """
     values = reduce_puzzle(values)
     if values is False:
         return False ## Failed earlier
@@ -141,7 +150,8 @@ def search(values):
     for value in values[s]:
         new_sudoku = values.copy()
         new_sudoku[s] = value
-#        assign_value(values, s, values[s])
+        #another place that we can assign values for visualization (optional)
+        #assign_value(values, s, values[s])
         attempt = search(new_sudoku)
         if attempt:
             return attempt
@@ -159,14 +169,17 @@ def solve(grid):
     
 
 if __name__ == '__main__':
+    #diag_sudoku_grid is an arbitrary sudoku in the grid form and String format
     diag_sudoku_grid = '2.............62....1....7...6..8...3...9...7...6..4...4....8....52.............3'
+    #display is optional
     display(solve(diag_sudoku_grid))
       
     try:
         from visualize import visualize_assignments
         visualize_assignments(assignments)
-
     except SystemExit:
         pass
     except:
-        print('We could not visualize your board due to a pygame issue. Not a problem! It is not a requirement.')
+        #changed it after I was sure that my visualization works correctly,
+        # to avoid "NameError: name 'quit' is not defined" in PySudoku.py
+        print('Now you did it!')
